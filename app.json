@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/entry/entry",
+    "pages/player/booking/booking",
+    "pages/player/pixel/pixel",
+    "pages/player/profile/profile",
+    "pages/merchant/dashboard/dashboard",
+    "pages/merchant/admin/admin",
+    "pages/merchant/user-detail/user-detail"
+  ],
+  "lazyCodeLoading": "requiredComponents",
+  "window": {
+    "navigationBarTitleText": "七月DIY拼豆",
+    "navigationBarBackgroundColor": "#4A90E2",
+    "navigationBarTextStyle": "white"
+  }
+}
