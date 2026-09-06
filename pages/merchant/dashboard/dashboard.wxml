@@ -1,0 +1,602 @@
+<view class="merchant-layout">
+  <view class="tab-content">
+    
+    <!-- 栏目一（0）：预约管理 (仅展示未核销与体验中订单) -->
+    <view wx:if="{{ currentTab === 0 }}" class="tab-pane">
+      <view class="summary-card">
+        <view class="card-title" style="display: flex; justify-content: space-between;">
+          <text>席位与工具概况</text>
+          <text style="color: #2563eb; font-size: 24rpx;" bindtap="openSettingModal">⚙️ 调整工位上限</text>
+        </view>
+        <view class="stats-row">
+          <view class="stat-item">
+            <text class="num {{ remainingSeats === 0 ? 'full' : '' }}">{{ remainingSeats }}/{{ maxSeatsConfig }}</text>
+            <text class="label">店内剩余 ({{ isSeatsFull ? '已满' : '空闲' }})</text>
+          </view>
+          <view class="stat-item">
+            <text class="num">{{ dormCount }}</text>
+            <text class="label">宿舍外带</text>
+          </view>
+          <view class="stat-item">
+            <text class="num">{{ remainingTools }}/{{ maxToolsConfig }}</text>
+            <text class="label">剩余工具</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="verify-bar">
+        <input class="verify-input" placeholder="输入6位预约码" value="{{verifyInputCode}}" bindinput="onCodeInput" type="number"/>
+        <button class="verify-btn" bindtap="verifyCode">校验核销</button>
+      </view>
+
+      <view class="section-header">
+        <text class="title-text">在店体验与待处理预约 ({{ pendingBookingList.length }} 笔)</text>
+        <text class="sub-text">历史核销与退款转至后台数据查看</text>
+      </view>
+
+      <scroll-view class="booking-scroll-area" scroll-y="true">
+        <view class="booking-item" wx:for="{{pendingBookingList}}" wx:key="id">
+          <view class="item-header">
+            <text class="user-main">{{ item.user_name || item.userName }} ({{ item.user_phone || item.userPhone }})</text>
+            <text class="badge {{ item.status === '体验中' ? 'tag-done' : 'tag-pending' }}">
+              {{ item.status === '体验中' ? '⏱️ 体验计时中' : item.status }}
+            </text>
+          </view>
+
+          <view class="item-grid">
+            <text><text class="k">地点：</text>{{ item.location }}</text>
+            <text><text class="k">人数：</text>{{ item.people_count || item.peopleCount }} 人</text>
+            <text><text class="k">套餐：</text>{{ item.package_name || item.package }}</text>
+            <text><text class="k">时间：</text>{{ item.booking_time || item.time }}</text>
+            <text><text class="k">实付：</text>￥{{ item.amount }}</text>
+            <text><text class="k">已退：</text><text class="refund-text">￥{{ item.refunded_amount || item.refundedAmount || 0 }}</text></text>
+            <text class="full-row"><text class="k">预约码：</text><text class="code-highlight">{{ item.code }}</text></text>
+            
+            <text class="full-row" wx:if="{{ item.status === '体验中' }}">
+              <text class="k">计时进度：</text>
+              <text style="color: #16a34a; font-weight: bold;">{{ item.startedTimeText || '已开表体验中' }}</text>
+            </text>
+          </view>
+
+          <view class="item-actions">
+            <!-- 状态 1：体验中 -> 商家独占点击【停止计时结算】 -->
+            <block wx:if="{{ item.status === '体验中' }}">
+              <button size="mini" class="action-btn" style="background:#ea580c; color:white;" bindtap="handleStopTimer" data-id="{{ item.id }}">停止计时结算</button>
+            </block>
+
+            <!-- 状态 2：待核销 / 部分退款 -> 商家点击【开始计时】(启动上桌计时) -->
+            <block wx:else>
+              <button size="mini" class="action-btn refund-btn" bindtap="openCustomRefundModal" data-item="{{ item }}">退款处理</button>
+              <button size="mini" class="action-btn check-btn" style="background:#2563eb; color:white;" bindtap="handleStartTimer" data-code="{{ item.code }}">开始计时</button>
+            </block>
+          </view>
+        </view>
+        <view wx:if="{{pendingBookingList.length === 0}}" class="empty-tip">当前没有在店体验或待核销的预约</view>
+      </scroll-view>
+    </view>
+
+    <!-- 栏目二（1）：豆色库存 (左侧A-Z系列分类，右侧对应系列色号) -->
+    <view wx:if="{{ currentTab === 1 }}" class="tab-pane">
+      <view class="stock-header-card">
+        <view class="stock-total-info">
+          <text class="stock-title">总拼豆库存</text>
+          <text class="stock-total-num">{{ totalBeanStock }} <text class="stock-unit">g</text></text>
+        </view>
+        <button class="add-color-btn" size="mini" bindtap="openAddColorDialog">+ 新增色号</button>
+      </view>
+
+      <view class="section-header">
+        <text class="title-text">各色号库存明细 ({{ colorInventory.length }} 色)</text>
+        <text class="sub-text">选择系列分类查看</text>
+      </view>
+
+      <view class="color-split-container">
+        <scroll-view class="series-sidebar" scroll-y="true">
+          <view 
+            class="series-item {{ selectedLetter === item ? 'active' : '' }}" 
+            wx:for="{{ seriesLetters }}" 
+            wx:key="*this"
+            bindtap="selectSeriesLetter"
+            data-letter="{{ item }}"
+          >
+            {{ item }} 系列
+          </view>
+        </scroll-view>
+
+        <scroll-view class="color-detail-scroll" scroll-y="true">
+          <view class="color-grid">
+            <block wx:for="{{ colorInventory }}" wx:key="code">
+              <view class="color-card" wx:if="{{ item.code[0] === selectedLetter }}">
+                <view class="color-dot-wrap">
+                  <view class="color-preview" style="background-color: {{ item.hex }};"></view>
+                  <view class="color-meta">
+                    <text class="c-code">{{ item.code }}</text>
+                    <text class="c-name">{{ item.name }}</text>
+                  </view>
+                </view>
+                <view class="c-stock-val {{ item.stock < 100 ? 'low-stock' : '' }}">{{ item.stock }}g</view>
+                <view class="c-actions">
+                  <button size="mini" bindtap="adjustColorStock" data-code="{{item.code}}" data-delta="-50">-50</button>
+                  <button size="mini" bindtap="adjustColorStock" data-code="{{item.code}}" data-delta="200">+200</button>
+                </view>
+              </view>
+            </block>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+
+    <!-- 栏目三（2）：套餐管理与营业排班 (5列一行网格) -->
+    <view wx:if="{{ currentTab === 2 }}" class="tab-pane">
+      <scroll-view class="data-scroll-area" scroll-y="true">
+        <!-- 1. 优惠活动推送 -->
+        <view class="panel-box">
+          <view class="panel-title">优惠活动推送</view>
+          <view class="push-action-row">
+            <button class="push-btn auto-btn" bindtap="triggerAutoPromoPush">
+              <text class="btn-icon">⚡</text>
+              <text>一键自动推送</text>
+            </button>
+            <button class="push-btn manual-btn" bindtap="openManualPushModal">
+              <text class="btn-icon">🎯</text>
+              <text>百分比精准推送</text>
+            </button>
+          </view>
+          <view class="rule-tip">
+            <text class="k">自动规则：</text>系统将向符合规则的客户统一派发限期 1 个月的优惠券，直接写入云端卡包。
+          </view>
+        </view>
+
+        <!-- 2. 营业时间排班 (5列一行) -->
+        <view class="panel-box schedule-panel">
+          <view class="panel-header-with-btn">
+            <view class="panel-title">营业时间排班 (半小时颗粒度)</view>
+            <text class="schedule-sync-hint {{ hasScheduleChanged ? 'hint-warn' : '' }}">
+              {{ hasScheduleChanged ? '⚠️ 有改动未保存' : '已与云端同步' }}
+            </text>
+          </view>
+
+          <view class="schedule-tabs">
+            <view 
+              class="sched-tab-item {{ currentScheduleType === 'mon_thu' ? 'active' : '' }}" 
+              bindtap="switchScheduleType" 
+              data-type="mon_thu"
+            >周一至周四</view>
+            <view 
+              class="sched-tab-item {{ currentScheduleType === 'fri' ? 'active' : '' }}" 
+              bindtap="switchScheduleType" 
+              data-type="fri"
+            >周五</view>
+            <view 
+              class="sched-tab-item {{ currentScheduleType === 'weekend' ? 'active' : '' }}" 
+              bindtap="switchScheduleType" 
+              data-type="weekend"
+            >周末两天</view>
+          </view>
+
+          <view class="schedule-grid">
+            <view 
+              class="time-capsule {{ currentScheduleSlotsMap[item] ? 'slot-active' : 'slot-disabled' }}" 
+              wx:for="{{ allDayHalfHourSlots }}" 
+              wx:key="*this"
+              bindtap="toggleSlotState"
+              data-slot="{{ item }}"
+            >
+              <text class="capsule-time">{{ item }}</text>
+              <text class="capsule-status">{{ currentScheduleSlotsMap[item] ? '开放' : '关闭' }}</text>
+            </view>
+          </view>
+
+          <view class="schedule-action-bar">
+            <view class="schedule-bottom-tip">
+              💡 状态说明：高亮蓝色为【用户可选】，灰白为【置灰关闭】。全天 30 个半小时时段。
+            </view>
+            <button 
+              class="save-schedule-btn {{ hasScheduleChanged ? 'btn-highlight' : '' }}" 
+              bindtap="saveScheduleToCloud"
+            >保存排班设置</button>
+          </view>
+        </view>
+
+        <!-- 3. 拼豆套餐管理 -->
+        <view class="panel-box">
+          <view class="panel-header-with-btn">
+            <view class="panel-title">拼豆套餐管理 ({{ packageList.length }} 种)</view>
+            <button size="mini" class="panel-action-btn add-admin-btn" bindtap="openAddPackageModal">+ 新增套餐</button>
+          </view>
+
+          <view class="pkg-manage-list">
+            <view class="pkg-manage-card {{ item.isOffShelf ? 'pkg-off-shelf' : '' }}" wx:for="{{ packageList }}" wx:key="id">
+              <view class="pkg-info-top">
+                <view class="pkg-title-wrap">
+                  <text class="pkg-name-text">{{ item.name }}</text>
+                  <text class="pkg-status-badge {{ item.isOffShelf ? 'off-badge' : 'on-badge' }}">
+                    {{ item.isOffShelf ? '已下架' : '在售中' }}
+                  </text>
+                </view>
+                <text class="pkg-price-text">￥{{ item.price }}</text>
+              </view>
+
+              <view class="pkg-info-sub">
+                <view class="pkg-meta-tags">
+                  <text class="pkg-people-badge">👥 {{ item.peopleLimit || item.people_limit || '1' }} 人</text>
+                  <text class="pkg-duration-badge">⏱️ {{ item.duration_hours || 1.0 }} 小时</text>
+                </view>
+                <view class="pkg-ops">
+                  <button 
+                    size="mini" 
+                    class="pkg-toggle-btn {{ item.isOffShelf ? 'btn-relist' : 'btn-delist' }}" 
+                    bindtap="togglePackageShelf" 
+                    data-id="{{ item.id }}"
+                    data-status="{{ item.isOffShelf }}"
+                  >
+                    {{ item.isOffShelf ? '上架' : '下架' }}
+                  </button>
+                  <button 
+                    size="mini" 
+                    class="pkg-toggle-btn btn-delete" 
+                    bindtap="deletePackageItem" 
+                    data-id="{{ item.id }}"
+                    data-name="{{ item.name }}"
+                  >
+                    删除
+                  </button>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 4. 历史推送明细 -->
+        <view class="panel-box">
+          <view class="panel-title">优惠推送明细</view>
+          <view class="push-history-list">
+            <view class="push-record-item" wx:for="{{ promoPushHistory }}" wx:key="id">
+              <view class="p-rec-top">
+                <text class="p-rec-user">{{ item.targetUser }}</text>
+                <text class="p-rec-tag">{{ item.type }}</text>
+              </view>
+              <view class="p-rec-detail">{{ item.content }}</view>
+              <view class="p-rec-time">{{ item.time }}</view>
+            </view>
+            <view wx:if="{{ promoPushHistory.length === 0 }}" class="empty-tip">暂无推送记录</view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 栏目四（3）：用户列表 (精准联动点亮重置密码按钮) -->
+    <view class="tab-pane" wx:if="{{ currentTab === 3 }}">
+      <view class="card" style="padding: 24rpx; background: white; border-radius: 14rpx;">
+        <view class="card-header" style="margin-bottom: 20rpx;">
+          <text class="card-title" style="font-weight: bold; font-size: 30rpx;">注册玩家列表 (共 {{ playersList.length }} 人)</text>
+          <text style="font-size: 22rpx; color: #999; margin-left: 10rpx;">红键表示玩家已申请重置密码</text>
+        </view>
+        <view class="user-table-wrap">
+          <block wx:if="{{ playersList.length > 0 }}">
+            <view class="user-row" wx:for="{{ playersList }}" wx:key="phone">
+              <view class="user-basic-info" bindtap="navigateToUserDetail" data-phone="{{ item.phone }}">
+                <text class="user-title-name">{{ item.name }} ›</text>
+                <text class="user-sub-phone">📱 {{ item.phone }}</text>
+              </view>
+              <view class="user-meta-info" style="text-align: right; display: flex; align-items: center; gap: 16rpx;">
+                <view>
+                  <text class="user-balance" style="color: #ff5722; font-weight: 500;">预存: {{ item.stored_hours || 0 }}h</text>
+                  <text class="user-time" style="font-size: 22rpx; color: #aaa; display: block;">{{ item.created_at }}</text>
+                </view>
+                <button 
+                  size="mini" 
+                  class="reset-action-btn {{ item.hasPendingReset ? 'btn-red-active' : 'btn-gray-disabled' }}"
+                  catchtap="handleResetPassword"
+                  data-phone="{{ item.phone }}"
+                  data-can-reset="{{ item.hasPendingReset }}"
+                >
+                  {{ item.hasPendingReset ? '确认重置' : '未申请' }}
+                </button>
+              </view>
+            </view>
+          </block>
+          <view wx:else class="empty-tip">暂无已注册玩家</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 栏目五（4）：后台数据 -->
+    <view wx:if="{{ currentTab === 4 }}" class="tab-pane">
+      <scroll-view class="data-scroll-area" scroll-y="true">
+        <view class="panel-box">
+          <view class="panel-header-with-btn">
+            <view class="panel-title">管理员信息</view>
+            <view class="admin-btns">
+              <button size="mini" class="panel-action-btn" bindtap="openEditCurrentAdmin">编辑资料</button>
+              <button size="mini" class="panel-action-btn add-admin-btn" wx:if="{{ currentAdmin.role === 'super_admin' }}" bindtap="openCreateAdminModal">+ 新建账号</button>
+            </view>
+          </view>
+
+          <view class="info-row">
+            <text class="k">姓名：</text>
+            <text class="v">{{ currentAdmin.name }} <text class="role-tag">{{ currentAdmin.role === 'super_admin' ? '超级管理员' : '普通管理员' }}</text></text>
+          </view>
+          <view class="info-row">
+            <text class="k">手机号：</text>
+            <text class="v">{{ currentAdmin.phone }}</text>
+          </view>
+
+          <view wx:if="{{ currentAdmin.role === 'super_admin' && allAdmins.length > 1 }}" class="admin-account-sublist">
+            <view class="sub-list-title">所有管理员账号 ({{ allAdmins.length }} 人)</view>
+            <view class="admin-row" wx:for="{{ allAdmins }}" wx:key="id">
+              <text class="admin-row-name">{{ item.name }} ({{ item.phone }})</text>
+              <text class="admin-row-role">{{ item.role === 'super_admin' ? '超管' : '店员' }}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="panel-box">
+          <view class="panel-title">收益概览</view>
+          <view class="income-dual-card">
+            <view class="income-col sell-box">
+              <text class="inc-label">卖出总额 (总流水)</text>
+              <text class="inc-value">￥{{ totalSalesIncome }}</text>
+              <text class="inc-count">共 {{ allBookingList.length }} 笔订单</text>
+            </view>
+            <view class="income-divider"></view>
+            <view class="income-col verified-box">
+              <text class="inc-label">核销总额 (履约净额)</text>
+              <text class="inc-value">￥{{ totalVerifiedIncome }}</text>
+              <text class="inc-count">共 {{ verifiedCount }} 笔已核销</text>
+            </view>
+          </view>
+          
+          <view class="sub-table-title" style="margin-top: 20rpx;">交易与核销全量明细</view>
+          <view class="detail-table">
+            <view class="table-head">
+              <text class="th">用户</text>
+              <text class="th">套餐</text>
+              <text class="th">状态</text>
+              <text class="th">实收</text>
+            </view>
+            <view class="table-row" wx:for="{{allBookingList}}" wx:key="id">
+              <text class="td">{{ item.user_name || item.userName }}</text>
+              <text class="td text-ellipsis">{{ item.package_name || item.package }}</text>
+              <text class="td {{ item.status === '已核销' ? 'tag-done-text' : (item.status === '待核销' ? 'tag-pending-text' : (item.status === '体验中' ? 'tag-done-text' : 'tag-refund-text')) }}">{{ item.status }}</text>
+              <text class="td income-text">￥{{ item.amount - (item.refunded_amount || item.refundedAmount || 0) }}</text>
+            </view>
+            <view wx:if="{{allBookingList.length === 0}}" class="empty-tip">暂无交易明细</view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+  </view>
+
+  <!-- 底部五栏 TabBar 导航 -->
+  <view class="bottom-tab-bar">
+    <view class="tab-btn {{ currentTab === 0 ? 'active' : '' }}" bindtap="switchTab" data-index="{{0}}">
+      <text class="tab-icon">📋</text>
+      <text class="tab-title">预约管理</text>
+    </view>
+    <view class="tab-btn {{ currentTab === 1 ? 'active' : '' }}" bindtap="switchTab" data-index="{{1}}">
+      <text class="tab-icon">🎨</text>
+      <text class="tab-title">豆色库存</text>
+    </view>
+    <view class="tab-btn {{ currentTab === 2 ? 'active' : '' }}" bindtap="switchTab" data-index="{{2}}">
+      <text class="tab-icon">🍱</text>
+      <text class="tab-title">套餐管理</text>
+    </view>
+    <view class="tab-btn {{ currentTab === 3 ? 'active' : '' }}" bindtap="switchTab" data-index="{{3}}">
+      <text class="tab-icon">👥</text>
+      <text class="tab-title">用户列表</text>
+    </view>
+    <view class="tab-btn {{ currentTab === 4 ? 'active' : '' }}" bindtap="switchTab" data-index="{{4}}">
+      <text class="tab-icon">📊</text>
+      <text class="tab-title">后台数据</text>
+    </view>
+  </view>
+
+  <!-- 弹窗：调整工位与工具上限 -->
+  <view class="modal-mask" wx:if="{{ showSettingModal }}" bindtap="closeSettingModal">
+    <view class="modal-box" catchtap="stopBubble">
+      <view class="modal-header">
+        <text class="modal-title">调整工位与工具上限</text>
+        <text class="close-icon" bindtap="closeSettingModal">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">店内最大容纳席位数</text>
+          <input class="m-input" type="number" value="{{ tempSeats }}" bindinput="onSeatsInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">店内最大工具套数</text>
+          <input class="m-input" type="number" value="{{ tempTools }}" bindinput="onToolsInput" />
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="m-btn cancel-btn" bindtap="closeSettingModal">取消</button>
+        <button class="m-btn confirm-btn" bindtap="saveShopSettings">保存配置</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 弹窗：自定义百分比优惠推送 -->
+  <view class="modal-mask" wx:if="{{ showManualPushModal }}" bindtap="closeManualPushModal">
+    <view class="modal-box" catchtap="stopBubble">
+      <view class="modal-header">
+        <text class="modal-title">自定义百分比优惠推送</text>
+        <text class="close-icon" bindtap="closeManualPushModal">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">选择目标用户</text>
+          <picker bindchange="onManualUserChange" value="{{ manualUserIdx }}" range="{{ playersList }}" range-key="name">
+            <view class="picker-m-box">{{ playersList[manualUserIdx] ? (playersList[manualUserIdx].name + ' (' + playersList[manualUserIdx].phone + ')') : '点击选择用户' }}</view>
+          </picker>
+        </view>
+
+        <view class="input-group">
+          <text class="input-label">选择目标套餐</text>
+          <picker bindchange="onManualPkgChange" value="{{ manualPkgIdx }}" range="{{ packageList }}" range-key="name">
+            <view class="picker-m-box">{{ packageList[manualPkgIdx] ? (packageList[manualPkgIdx].name + ' (原价￥' + packageList[manualPkgIdx].price + ')') : '点击选择套餐' }}</view>
+          </picker>
+        </view>
+
+        <view class="input-group">
+          <text class="input-label">优惠折扣百分比 (如: 85 代表 85折/8.5折)</text>
+          <view class="percent-input-row">
+            <input class="m-input flex-1" type="number" placeholder="输入 1 ~ 99 的数值" value="{{ manualDiscountPercent }}" bindinput="onManualPercentInput" />
+            <text class="percent-unit">% 折扣</text>
+          </view>
+        </view>
+
+        <view class="discount-calc-preview">
+          <view class="calc-row">
+            <text class="c-k">原价：</text><text class="c-v">￥{{ selectedPkgOriginPrice }}</text>
+          </view>
+          <view class="calc-row">
+            <text class="c-k">折后实际价格：</text><text class="c-v highlight-price">￥{{ calcDiscountedPrice }}</text>
+          </view>
+          <view class="calc-row">
+            <text class="c-k">为用户立省：</text><text class="c-v save-price">￥{{ calcSavedPrice }} ({{ manualDiscountPercent }}折)</text>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="m-btn cancel-btn" bindtap="closeManualPushModal">取消</button>
+        <button class="m-btn confirm-btn" bindtap="confirmManualPush">确认推送入库</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 弹窗：新增套餐 (含半小时步进时长) -->
+  <view class="modal-mask" wx:if="{{ showAddPackageModal }}" bindtap="closeAddPackageModal">
+    <view class="modal-box" catchtap="stopBubble">
+      <view class="modal-header">
+        <text class="modal-title">新增拼豆套餐</text>
+        <text class="close-icon" bindtap="closeAddPackageModal">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">套餐名称</text>
+          <input class="m-input" placeholder="如: 亲子双人拼豆包" value="{{ newPkgForm.name }}" bindinput="onPkgNameInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">套餐单价 (元)</text>
+          <input class="m-input" type="digit" placeholder="如: 59.9" value="{{ newPkgForm.price }}" bindinput="onPkgPriceInput" />
+        </view>
+        <view class="form-row-2" style="display: flex; gap: 20rpx;">
+          <view class="input-group" style="flex: 1;">
+            <text class="input-label">适用人数</text>
+            <input class="m-input" type="number" placeholder="如: 2" value="{{ newPkgForm.peopleLimit }}" bindinput="onPkgPeopleInput" />
+          </view>
+          <view class="input-group" style="flex: 1;">
+            <text class="input-label">适用游玩时长</text>
+            <picker bindchange="onPkgDurationChange" value="{{ pkgDurationIndex }}" range="{{ durationStepOptions }}">
+              <view class="picker-m-box">{{ durationStepOptions[pkgDurationIndex] }}</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="m-btn cancel-btn" bindtap="closeAddPackageModal">取消</button>
+        <button class="m-btn confirm-btn" bindtap="confirmAddPackage">确认上架到云端</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 弹窗：新增色号 -->
+  <view class="modal-mask" wx:if="{{ showAddColorModal }}" bindtap="closeAddColorDialog">
+    <view class="modal-box" catchtap="stopBubble">
+      <view class="modal-header">
+        <text class="modal-title">新增拼豆色号</text>
+        <text class="close-icon" bindtap="closeAddColorDialog">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">色号编号</text>
+          <input class="m-input" placeholder="如: F08 / A12" value="{{ newColorForm.code }}" bindinput="onNewColorCodeInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">颜色名称</text>
+          <input class="m-input" placeholder="如: 抹茶绿 / 荧光粉" value="{{ newColorForm.name }}" bindinput="onNewColorNameInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">初始库存 (克)</text>
+          <input class="m-input" type="number" placeholder="默认 500" value="{{ newColorForm.stock }}" bindinput="onNewColorStockInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">选择预设色板</text>
+          <view class="palette-grid">
+            <view 
+              class="palette-item {{ newColorForm.hex === item ? 'selected' : '' }}" 
+              wx:for="{{ presetColors }}" 
+              wx:key="*this" 
+              style="background-color: {{ item }};"
+              bindtap="selectPresetColor"
+              data-hex="{{ item }}"
+            ></view>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="m-btn cancel-btn" bindtap="closeAddColorDialog">取消</button>
+        <button class="m-btn confirm-btn" bindtap="confirmAddColor">确认保存到云端</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 弹窗：编辑管理员资料 -->
+  <view class="modal-mask" wx:if="{{ showEditAdminModal }}" bindtap="closeEditAdminModal">
+    <view class="modal-box" catchtap="stopBubble">
+      <view class="modal-header">
+        <text class="modal-title">编辑管理员资料</text>
+        <text class="close-icon" bindtap="closeEditAdminModal">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">姓名</text>
+          <input class="m-input" value="{{ editAdminForm.name }}" bindinput="onEditNameInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">手机号</text>
+          <input class="m-input" type="number" value="{{ editAdminForm.phone }}" bindinput="onEditPhoneInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">修改密码 (不填保留原密码)</text>
+          <input class="m-input" password placeholder="新密码" value="{{ editAdminForm.password }}" bindinput="onEditPasswordInput" />
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="m-btn cancel-btn" bindtap="closeEditAdminModal">取消</button>
+        <button class="m-btn confirm-btn" bindtap="saveCurrentAdmin">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 弹窗：新建管理员账号 -->
+  <view class="modal-mask" wx:if="{{ showCreateAdminModal }}" bindtap="closeCreateAdminModal">
+    <view class="modal-box" catchtap="stopBubble">
+      <view class="modal-header">
+        <text class="modal-title">新建管理员账号</text>
+        <text class="close-icon" bindtap="closeCreateAdminModal">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">管理员姓名</text>
+          <input class="m-input" placeholder="输入姓名" value="{{ createAdminForm.name }}" bindinput="onCreateNameInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">手机号</text>
+          <input class="m-input" type="number" placeholder="输入手机号" value="{{ createAdminForm.phone }}" bindinput="onCreatePhoneInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">初始登录密码</text>
+          <input class="m-input" password placeholder="默认 8888" value="{{ createAdminForm.password }}" bindinput="onCreatePasswordInput" />
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="m-btn cancel-btn" bindtap="closeCreateAdminModal">取消</button>
+        <button class="m-btn confirm-btn" bindtap="confirmCreateAdmin">确认创建</button>
+      </view>
+    </view>
+  </view>
+  
+</view>

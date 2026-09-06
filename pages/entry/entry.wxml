@@ -1,0 +1,79 @@
+<view class="entry-container" style="display: flex; flex-direction: column; min-height: 100vh; box-sizing: border-box;">
+  <!-- 顶部 Logo 区域 -->
+  <view class="logo-area">
+    <view class="brand-badge">DIY WORKSHOP</view>
+    <text class="title">七月 DIY 拼豆</text>
+    <text class="subtitle">请选择您的登录身份</text>
+  </view>
+
+  <!-- 中间核心区：只留玩家微信一键登录入口 -->
+  <view class="role-cards" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 40rpx;">
+    <!-- 玩家端入口 -->
+    <button class="role-btn player-btn" bindtap="openPlayerLoginModal" style="width: 100%;">
+      <view class="btn-icon">🎮</view>
+      <view class="btn-text-wrap">
+        <view class="btn-text">玩家体验端</view>
+        <view class="btn-desc">微信一键登录 · 在线预约、图纸画板</view>
+      </view>
+    </button>
+  </view>
+
+  <!-- 底部固定居中小按钮：商家管理入口 -->
+  <view style="display: flex; justify-content: center; padding-bottom: 50rpx;">
+    <view bindtap="openMerchantLoginModal" style="display: flex; align-items: center; background: #f0f2f5; padding: 12rpx 32rpx; border-radius: 30rpx;">
+      <text style="font-size: 26rpx; margin-right: 8rpx;">🛠</text>
+      <text style="font-size: 24rpx; color: #888;">商家管理后台</text>
+    </view>
+  </view>
+
+  <!-- 登录弹窗：玩家微信一键登录 / 商家管理员密码登录 -->
+  <view class="modal-mask" wx:if="{{ showLoginModal }}" bindtap="closeLoginModal">
+    <view class="modal-box" catchtap="stopBubble">
+      <view class="modal-header">
+        <text class="modal-title">{{ loginType === 'merchant' ? '🛠 商家管理员登录' : '🎮 玩家微信快捷登录' }}</text>
+        <text class="close-icon" bindtap="closeLoginModal">×</text>
+      </view>
+
+      <view class="modal-body">
+        <!-- 商家端保留账号密码 -->
+        <block wx:if="{{ loginType === 'merchant' }}">
+          <view class="input-group">
+            <text class="input-label">管理员姓名</text>
+            <input class="m-input" placeholder="默认: 七月店长" value="{{ loginAccount }}" bindinput="onAccountInput" />
+          </view>
+          <view class="input-group">
+            <text class="input-label">登录密码</text>
+            <input class="m-input" password placeholder="默认: 8888" value="{{ loginPassword }}" bindinput="onPasswordInput" />
+          </view>
+        </block>
+
+        <!-- 玩家端：微信一键快捷登录提示 -->
+        <block wx:else>
+          <view style="padding: 40rpx 20rpx; text-align: center;">
+            <text style="font-size: 28rpx; color: #64748b; line-height: 1.6; display: block; margin-bottom: 30rpx;">
+              点击下方按钮，将直接使用您的微信账号快捷授权登录七月DIY拼豆
+            </text>
+            <button 
+              type="primary" 
+              style="background: #2563eb; color: #fff; width: 100%; border-radius: 40rpx; font-size: 30rpx; padding: 16rpx 0;" 
+              bindtap="handleWechatQuickLogin"
+            >
+              微信一键授权登录
+            </button>
+          </view>
+        </block>
+
+        <!-- 错误与提示框 -->
+        <view class="error-tip" wx:if="{{ errorMessage }}">
+          <text class="err-icon">⚠️</text>
+          <text>{{ errorMessage }}</text>
+        </view>
+      </view>
+
+      <view class="modal-footer" wx:if="{{ loginType === 'merchant' }}">
+        <button class="m-btn cancel-btn" bindtap="closeLoginModal">取消</button>
+        <button class="m-btn confirm-btn" bindtap="handleLoginSubmit">立即登录</button>
+      </view>
+    </view>
+  </view>
+</view>

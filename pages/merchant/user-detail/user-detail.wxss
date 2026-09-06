@@ -1,0 +1,207 @@
+.detail-container {
+  padding: 30rpx;
+  background-color: #f7f9fc;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.summary-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
+}
+
+.user-main-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1rpx solid #f0f0f0;
+  padding-bottom: 24rpx;
+}
+
+.user-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+}
+
+.user-phone {
+  font-size: 24rpx;
+  color: #6b7280;
+  margin-top: 6rpx;
+  display: block;
+}
+
+.push-coupon-btn {
+  background: #3b82f6;
+  color: #fff;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  padding: 8rpx 24rpx;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 24rpx;
+  padding: 16rpx 0;
+  background: #f8fafc;
+  border-radius: 12rpx;
+}
+
+.stat-box {
+  text-align: center;
+}
+
+.stat-num {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #2563eb;
+  display: block;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #64748b;
+  margin-top: 4rpx;
+  display: block;
+}
+
+.tags-section {
+  display: flex;
+  align-items: center;
+  margin-top: 24rpx;
+}
+
+.tag-title {
+  font-size: 24rpx;
+  color: #64748b;
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.tag-item {
+  background: #eff6ff;
+  color: #3b82f6;
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+}
+
+.tag-empty {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.list-section {
+  margin-top: 40rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #374151;
+  margin-bottom: 20rpx;
+}
+
+.order-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.03);
+}
+
+.order-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1rpx solid #f9f9f9;
+  padding-bottom: 14rpx;
+  margin-bottom: 14rpx;
+}
+
+.order-pkg {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.badge {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 12rpx;
+}
+
+.tag-pending { background: #fff7e6; color: #fa8c16; }
+.tag-done { background: #f6ffed; color: #52c41a; }
+.tag-refund { background: #fff1f0; color: #f5222d; }
+
+.order-meta .row {
+  font-size: 24rpx;
+  color: #6b7280;
+  margin-bottom: 8rpx;
+}
+
+.order-meta .k {
+  color: #9ca3af;
+}
+
+.refund-val {
+  color: #f5222d;
+}
+
+.code-val {
+  font-weight: bold;
+  color: #2563eb;
+  letter-spacing: 2rpx;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 26rpx;
+  padding: 60rpx 0;
+}
+/* 部分退款标签状态 */
+.tag-partial {
+  background: #fff7ed;
+  color: #ea580c;
+  border: 1rpx solid #fed7aa;
+}
+
+/* 订单卡片内部操作栏 */
+.order-action-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16rpx;
+  margin-top: 14rpx;
+  padding-top: 12rpx;
+  border-top: 1rpx dashed #eee;
+}
+
+.act-btn {
+  margin: 0 !important;
+  font-size: 22rpx !important;
+  padding: 6rpx 20rpx !important;
+  border-radius: 8rpx;
+}
+
+.act-btn.refund-btn {
+  background: #fff1f2;
+  color: #e11d48;
+  border: 1rpx solid #fecdd3;
+}
+
+.act-btn.verify-btn {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1rpx solid #bfdbfe;
+  font-weight: bold;
+}

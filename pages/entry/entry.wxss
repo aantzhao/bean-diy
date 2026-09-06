@@ -1,0 +1,168 @@
+.entry-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #e3f2fd 0%, #f5f7fa 100%);
+  padding: 60rpx 40rpx;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.logo-area {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+.brand-badge {
+  display: inline-block;
+  font-size: 20rpx;
+  font-weight: bold;
+  background: #1976d2;
+  color: white;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+  margin-bottom: 12rpx;
+  letter-spacing: 2rpx;
+}
+.title {
+  font-size: 46rpx;
+  font-weight: bold;
+  color: #1e293b;
+  display: block;
+}
+.subtitle {
+  font-size: 26rpx;
+  color: #64748b;
+  margin-top: 10rpx;
+  display: block;
+}
+
+.role-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 28rpx;
+}
+
+.role-btn {
+  display: flex;
+  align-items: center;
+  border-radius: 20rpx;
+  padding: 30rpx 36rpx;
+  text-align: left;
+  border: none;
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.06);
+}
+.btn-icon {
+  font-size: 52rpx;
+  margin-right: 24rpx;
+}
+.btn-text-wrap {
+  flex: 1;
+}
+.player-btn {
+  background: white;
+  border-left: 10rpx solid #3b82f6;
+}
+.merchant-btn {
+  background: white;
+  border-left: 10rpx solid #10b981;
+}
+.btn-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1e293b;
+}
+.btn-desc {
+  font-size: 22rpx;
+  color: #64748b;
+  margin-top: 6rpx;
+}
+
+/* 登录弹窗样式 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+.modal-box {
+  width: 86%;
+  background: white;
+  border-radius: 20rpx;
+  padding: 34rpx;
+  box-sizing: border-box;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.2);
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.modal-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #1e293b;
+}
+.close-icon {
+  font-size: 44rpx;
+  color: #94a3b8;
+  line-height: 1;
+}
+.input-group {
+  margin-bottom: 20rpx;
+}
+.input-label {
+  font-size: 24rpx;
+  color: #475569;
+  margin-bottom: 8rpx;
+  display: block;
+}
+.m-input {
+  background: #f8fafc;
+  border: 1rpx solid #cbd5e1;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  font-size: 26rpx;
+}
+
+/* 错误提示条 */
+.error-tip {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 22rpx;
+  padding: 12rpx 16rpx;
+  border-radius: 10rpx;
+  margin-top: 10rpx;
+}
+.err-icon {
+  font-size: 24rpx;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 28rpx;
+}
+.m-btn {
+  flex: 1;
+  font-size: 26rpx;
+  padding: 14rpx 0;
+  border-radius: 10rpx;
+}
+.cancel-btn {
+  background: #f1f5f9;
+  color: #475569;
+}
+.confirm-btn {
+  background: #1976d2;
+  color: white;
+}

@@ -1,0 +1,965 @@
+.player-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f7f9fc;
+}
+
+.tab-body {
+  flex: 1;
+  overflow: hidden;
+}
+
+.pane-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.full-scroll {
+  height: 100%;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+/* 顶端未核销炫彩卡片 */
+.active-ticket-card {
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  color: white;
+  border-radius: 20rpx;
+  padding: 26rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 20rpx rgba(254, 180, 123, 0.35);
+}
+
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.ticket-badge {
+  font-size: 20rpx;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+  font-weight: 500;
+}
+
+.ticket-day-tag {
+  font-size: 20rpx;
+  opacity: 0.9;
+}
+
+.ticket-status {
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.ticket-code-wrap {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(8px);
+  border-radius: 16rpx;
+  padding: 16rpx;
+  margin: 16rpx 0;
+}
+
+.ticket-code-label {
+  font-size: 20rpx;
+  display: block;
+  opacity: 0.85;
+}
+
+.ticket-code-val {
+  font-size: 56rpx;
+  font-weight: 800;
+  letter-spacing: 8rpx;
+  line-height: 1.2;
+}
+
+.ticket-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 8rpx;
+  font-size: 22rpx;
+  opacity: 0.95;
+}
+
+.tk { opacity: 0.8; }
+.tk-full { grid-column: span 2; margin-top: 4rpx; font-weight: bold; }
+
+.ticket-refund-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16rpx;
+  padding-top: 14rpx;
+  border-top: 1rpx dashed rgba(255, 255, 255, 0.4);
+}
+
+.refund-tip-text {
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.ticket-refund-btn {
+  margin: 0 !important;
+  font-size: 20rpx !important;
+  background: white;
+  color: #ff7e5f;
+  font-weight: bold;
+  border-radius: 8rpx;
+}
+
+/* 玻璃质感主卡片 */
+.glass-card {
+  background: white;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 14rpx rgba(0, 0, 0, 0.03);
+}
+
+.card-header-clean {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24rpx;
+}
+
+.main-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.sub-rule {
+  font-size: 22rpx;
+  color: #64748b;
+}
+
+/* 分段选择器 */
+.segmented-control {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 12rpx;
+  padding: 6rpx;
+  gap: 8rpx;
+}
+
+.segment-btn {
+  flex: 1;
+  text-align: center;
+  font-size: 24rpx;
+  padding: 14rpx 0;
+  color: #64748b;
+  border-radius: 8rpx;
+  transition: all 0.2s;
+}
+
+.segment-btn.active {
+  background: white;
+  color: #2563eb;
+  font-weight: bold;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 表单组件 */
+.form-group {
+  margin-bottom: 22rpx;
+}
+
+.f-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.f-label {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #475569;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.day-desc {
+  font-size: 22rpx;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.deposit-tag {
+  font-size: 20rpx;
+  color: #059669;
+  background: #ecfdf5;
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+  font-weight: bold;
+}
+
+.form-row-2 {
+  display: flex;
+  gap: 20rpx;
+}
+
+.flex-1 { flex: 1; }
+
+.picker-selector-clean {
+  background: #f8fafc;
+  border: 1rpx solid #e2e8f0;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  font-size: 26rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.val-bold { font-weight: bold; color: #1e293b; }
+.arrow-down { font-size: 22rpx; color: #94a3b8; }
+
+.f-input-clean {
+  background: #f8fafc;
+  border: 1rpx solid #e2e8f0;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  font-size: 26rpx;
+  color: #1e293b;
+}
+
+/* 推荐套餐展示卡片 */
+.match-pkg-card {
+  background: #eff6ff;
+  border: 1rpx solid #bfdbfe;
+  border-radius: 14rpx;
+  padding: 18rpx 22rpx;
+  margin-bottom: 22rpx;
+}
+
+.match-pkg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.match-tag {
+  font-size: 20rpx;
+  color: #2563eb;
+  background: #dbeafe;
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+  font-weight: bold;
+}
+
+.match-price {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #ea580c;
+}
+
+.match-pkg-name {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #1e3a8a;
+  margin-top: 6rpx;
+}
+
+/* 核心优化：用户端排班胶囊 5 列一行整齐紧凑 */
+.time-capsule-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 10rpx !important;
+}
+
+.time-capsule-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10rpx 0 !important;
+  border-radius: 10rpx !important;
+  border: 1rpx solid #e2e8f0;
+  transition: all 0.15s;
+}
+
+.time-capsule-btn .t-time {
+  font-size: 22rpx !important;
+  line-height: 1.2;
+}
+
+.time-capsule-btn .t-state {
+  font-size: 16rpx !important;
+  padding: 2rpx 6rpx !important;
+  border-radius: 4rpx;
+  margin-top: 4rpx;
+}
+
+.time-capsule-btn .t-tool {
+  font-size: 14rpx !important;
+  color: #64748b;
+  margin-top: 2rpx;
+}
+
+.time-capsule-btn.open {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.time-capsule-btn.open .t-time { color: #334155; font-weight: 500; }
+.time-capsule-btn.open .t-state { color: #059669; background: #ecfdf5; }
+
+.time-capsule-btn.selected {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  box-shadow: 0 4rpx 10rpx rgba(37, 99, 235, 0.3);
+}
+
+.time-capsule-btn.selected .t-time { color: white; font-weight: bold; }
+.time-capsule-btn.selected .t-state { color: #2563eb; background: white; font-weight: bold; }
+.time-capsule-btn.selected .t-tool { color: rgba(255, 255, 255, 0.85); }
+
+.time-capsule-btn.disabled {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.time-capsule-btn.disabled .t-time { color: #94a3b8; }
+.time-capsule-btn.disabled .t-state { color: #94a3b8; background: #e2e8f0; }
+
+/* 叠加预存时长进店控制栏 */
+.deposit-toggle-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f0fdf4;
+  border: 1rpx solid #bbf7d0;
+  border-radius: 14rpx;
+  padding: 16rpx 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.deposit-info-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.d-title {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #15803d;
+}
+
+.d-desc {
+  font-size: 20rpx;
+  color: #16a34a;
+  margin-top: 4rpx;
+}
+
+.hours-val {
+  color: #059669 !important;
+}
+
+/* 全天无限量通票专属卡片 */
+.allday-pass-card {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 1rpx solid #bfdbfe;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 22rpx;
+}
+
+.pass-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 14rpx;
+}
+
+.pass-icon { font-size: 32rpx; }
+.pass-title { font-size: 28rpx; font-weight: bold; color: #1d4ed8; }
+.pass-rules { display: flex; flex-direction: column; gap: 8rpx; }
+.pass-rule-item { font-size: 22rpx; color: #3b82f6; line-height: 1.4; }
+.rule-hl { font-weight: bold; color: #dc2626; }
+
+/* 警告提示卡片与按钮禁用 */
+.match-warning-card {
+  background: #fffbeb;
+  border: 1rpx solid #fde68a;
+  border-radius: 14rpx;
+  padding: 20rpx;
+  margin-bottom: 22rpx;
+}
+
+.warn-title { font-size: 26rpx; font-weight: bold; color: #b45309; }
+.warn-desc { font-size: 22rpx; color: #d97706; margin-top: 6rpx; }
+.text-warn { color: #d97706 !important; }
+
+.pay-submit-btn.btn-disabled {
+  background: #cbd5e1 !important;
+  color: #94a3b8 !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+/* 优惠券选择器 */
+.coupon-active-bar {
+  border-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.coupon-txt-highlight { color: #b45309; font-weight: bold; }
+.coupon-txt-none { color: #94a3b8; }
+.coupon-tip-tag { font-size: 20rpx; color: #b45309; }
+
+/* 结算明细 */
+.price-checkout-card {
+  background: #f8fafc;
+  border-radius: 14rpx;
+  padding: 20rpx;
+  margin-top: 10rpx;
+}
+
+.checkout-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24rpx;
+  margin-bottom: 8rpx;
+}
+
+.ck-label { color: #64748b; }
+.ck-val { font-weight: 500; color: #334155; }
+.ck-green { color: #16a34a !important; font-weight: bold; }
+
+.checkout-divider {
+  height: 1rpx;
+  background: #e2e8f0;
+  margin: 12rpx 0;
+}
+
+.final-row { align-items: baseline; margin-bottom: 0; }
+.final-label { font-size: 26rpx; font-weight: bold; color: #1e293b; }
+.final-price-wrap { display: flex; align-items: baseline; color: #dc2626; }
+.currency { font-size: 24rpx; font-weight: bold; }
+.final-num { font-size: 40rpx; font-weight: 900; }
+
+.pay-submit-btn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  font-size: 28rpx;
+  font-weight: bold;
+  padding: 20rpx 0;
+  border-radius: 14rpx;
+  margin-top: 24rpx;
+  box-shadow: 0 4rpx 14rpx rgba(37, 99, 235, 0.3);
+}
+
+.pay-submit-btn:active { opacity: 0.9; }
+
+/* 个人中心与历史记录样式 */
+.user-main-card {
+  background: white;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.03);
+}
+
+.user-head-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.user-avatar-circle {
+  width: 90rpx;
+  height: 90rpx;
+  background: #eff6ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42rpx;
+}
+
+.u-name { font-size: 30rpx; font-weight: bold; color: #1e293b; display: block; }
+.u-phone { font-size: 22rpx; color: #64748b; margin-top: 4rpx; display: block; }
+
+.wallet-bar {
+  display: flex;
+  background: #f8fafc;
+  border-radius: 12rpx;
+  padding: 16rpx 0;
+}
+
+.wallet-item { flex: 1; text-align: center; }
+.w-label { font-size: 20rpx; color: #64748b; display: block; }
+.w-val { font-size: 32rpx; font-weight: bold; color: #2563eb; margin-top: 4rpx; display: block; }
+
+.card-box {
+  background: white;
+  border-radius: 20rpx;
+  padding: 26rpx;
+  margin-bottom: 20rpx;
+}
+
+.card-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #1e293b;
+  margin-bottom: 18rpx;
+  border-left: 6rpx solid #2563eb;
+  padding-left: 12rpx;
+}
+
+/* 个人中心自选券高亮与点击提示 */
+.history-item {
+  border-radius: 14rpx;
+  padding: 16rpx 20rpx;
+  margin-bottom: 14rpx;
+  background: #f8fafc;
+  border: 1rpx solid #e2e8f0;
+  transition: all 0.2s;
+  font-size: 24rpx;
+}
+
+.history-item-active {
+  background: #eff6ff !important;
+  border: 2rpx solid #2563eb !important;
+  box-shadow: 0 4rpx 12rpx rgba(37, 99, 235, 0.15);
+}
+
+.h-top { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 8rpx; }
+.h-pkg-wrap { display: flex; align-items: center; gap: 12rpx; }
+.h-pkg { color: #1e293b; }
+.active-badge { font-size: 18rpx; background: #2563eb; color: white; padding: 2rpx 10rpx; border-radius: 6rpx; font-weight: bold; }
+.h-stat.tag-done { color: #16a34a; }
+.h-stat.tag-pending { color: #ea580c; }
+.h-stat.tag-refund { color: #dc2626; }
+
+.h-meta { display: flex; flex-direction: column; gap: 6rpx; color: #64748b; font-size: 22rpx; }
+.code-bold { color: #2563eb; font-weight: bold; font-size: 26rpx; }
+
+.h-action-bar { margin-top: 10rpx; text-align: right; border-top: 1rpx dashed #e2e8f0; padding-top: 8rpx; }
+.use-tip { font-size: 20rpx; color: #2563eb; font-weight: bold; }
+
+/* 优惠券列表卡片 */
+.coupon-card {
+  display: flex;
+  background: white;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.03);
+}
+
+.coupon-card.coupon-used { opacity: 0.45; filter: grayscale(1); }
+.c-left { width: 170rpx; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20rpx 0; }
+.c-num-tag { font-size: 34rpx; font-weight: 800; }
+.c-type-lbl { font-size: 18rpx; margin-top: 4rpx; opacity: 0.9; }
+.c-right { flex: 1; padding: 18rpx 20rpx; display: flex; flex-direction: column; justify-content: center; }
+.c-name { font-size: 26rpx; font-weight: bold; color: #1e293b; }
+.c-limit { font-size: 22rpx; color: #64748b; margin: 4rpx 0; }
+.c-time { font-size: 20rpx; color: #94a3b8; }
+
+.promo-hero-card {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+}
+
+.promo-tag-top { font-size: 20rpx; background: rgba(255,255,255,0.25); padding: 4rpx 12rpx; border-radius: 6rpx; display: inline-block; }
+.promo-main-title { font-size: 34rpx; font-weight: bold; margin: 12rpx 0 6rpx 0; }
+.promo-desc { font-size: 22rpx; opacity: 0.9; margin-bottom: 16rpx; }
+.claim-promo-btn { background: white; color: #4f46e5; font-weight: bold; }
+.section-title { font-size: 28rpx; font-weight: bold; margin-bottom: 16rpx; color: #1e293b; }
+.empty-tip { text-align: center; color: #94a3b8; font-size: 22rpx; padding: 36rpx 0; }
+
+/* 画板模块 */
+.pixel-board-container { padding: 20rpx; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
+.board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16rpx; }
+.board-title { font-size: 30rpx; font-weight: bold; }
+.board-sub { font-size: 22rpx; color: #888; display: block; }
+.clear-canvas-btn { background: #fee2e2; color: #ef4444; font-size: 20rpx !important; margin: 0 !important; }
+.palette-bar { display: flex; gap: 12rpx; margin-bottom: 16rpx; overflow-x: auto; padding-bottom: 8rpx; }
+.palette-chip { width: 48rpx; height: 48rpx; border-radius: 50%; flex-shrink: 0; }
+.palette-chip.active-chip { border: 4rpx solid #333; transform: scale(1.1); }
+.pixel-grid-wrap { flex: 1; background: white; border-radius: 16rpx; padding: 16rpx; display: flex; align-items: center; justify-content: center; }
+.pixel-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4rpx; width: 100%; aspect-ratio: 1 / 1; }
+.pixel-cell { background: #f0f0f0; border-radius: 4rpx; }
+
+/* 底部 TabBar */
+.player-tab-bar {
+  display: flex;
+  height: 100rpx;
+  background: white;
+  border-top: 1rpx solid #e2e8f0;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+}
+
+.tab-item.active { color: #2563eb; font-weight: bold; }
+.tab-icon { font-size: 32rpx; }
+.tab-name { font-size: 20rpx; margin-top: 2rpx; }
+/* 个人中心编辑资料按钮 */
+.edit-profile-btn {
+  background: #eff6ff !important;
+  color: #2563eb !important;
+  border: 1rpx solid #bfdbfe !important;
+  border-radius: 30rpx !important;
+  font-size: 22rpx !important;
+  padding: 6rpx 18rpx !important;
+  margin: 0 !important;
+  margin-left: auto;
+}
+
+/* 弹窗通用基础样式 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  width: 86%;
+  background: white;
+  border-radius: 20rpx;
+  padding: 34rpx;
+  box-sizing: border-box;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.modal-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.close-icon {
+  font-size: 40rpx;
+  color: #94a3b8;
+  line-height: 1;
+}
+
+.input-group {
+  margin-bottom: 18rpx;
+}
+
+.input-label {
+  font-size: 24rpx;
+  color: #475569;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.m-input {
+  background: #f8fafc;
+  border: 1rpx solid #cbd5e1;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  font-size: 26rpx;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 28rpx;
+}
+
+.m-btn {
+  flex: 1;
+  font-size: 26rpx;
+  padding: 16rpx 0;
+  border-radius: 10rpx;
+}
+
+.cancel-btn {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.confirm-btn {
+  background: #2563eb;
+  color: white;
+}
+/* ==============================================
+   Canvas 2D 纯正圆形捏泡泡画板 (无变形)
+   ============================================== */
+   .pixel-pane {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 16rpx 20rpx;
+    overflow: hidden;
+  }
+  
+  .hidden-canvas {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 104px;
+    height: 104px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .pixel-ctrl-card {
+    background: white;
+    border-radius: 16rpx;
+    padding: 20rpx;
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+    margin-bottom: 16rpx;
+  }
+  
+  .pixel-row-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14rpx;
+  }
+  
+  .ctrl-title {
+    font-size: 26rpx;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .size-segmented {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 10rpx;
+    padding: 4rpx;
+    gap: 8rpx;
+  }
+  
+  .size-btn {
+    font-size: 22rpx;
+    padding: 6rpx 16rpx;
+    color: #64748b;
+    border-radius: 8rpx;
+    transition: all 0.2s ease;
+  }
+  
+  .size-btn.active {
+    background: white;
+    color: #2563eb;
+    font-weight: bold;
+    box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.08);
+  }
+  
+  .pixel-action-row {
+    display: flex;
+    gap: 12rpx;
+    margin-bottom: 12rpx;
+  }
+  
+  .pixel-op-btn {
+    flex: 1;
+    margin: 0 !important;
+    font-size: 22rpx !important;
+    padding: 8rpx 0 !important;
+    border-radius: 8rpx;
+  }
+  
+  .pic-btn {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1rpx solid #bfdbfe;
+  }
+  
+  .gen-btn {
+    background: #2563eb;
+    color: white;
+  }
+  
+  .gen-btn[disabled] {
+    background: #e2e8f0 !important;
+    color: #94a3b8 !important;
+  }
+  
+  .clear-btn {
+    background: #f1f5f9;
+    color: #64748b;
+    flex: 0.5;
+  }
+  
+  .stock-reminder-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    padding: 8rpx 14rpx;
+    border-radius: 8rpx;
+  }
+  
+  .remind-tip {
+    font-size: 20rpx;
+    color: #64748b;
+  }
+  
+  .filled-stats {
+    font-size: 22rpx;
+    font-weight: bold;
+    color: #2563eb;
+  }
+  
+  /* 核心：严格限制容器比例，Canvas 宽与高严格强制 1:1 正方形 */
+  .canvas-viewport {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #cbd5e1;
+    border-radius: 16rpx;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 10rpx;
+    box-shadow: inset 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  }
+  
+  .bubble-canvas {
+    width: 680rpx !important;
+    height: 680rpx !important; /* 强制等宽高，保证绝对正圆 */
+    border-radius: 12rpx;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.12);
+    touch-action: none;
+  }
+  /* ==============================================
+   主色限制选择与用色展示卡片
+   ============================================== */
+.color-limit-scroll {
+  white-space: nowrap;
+  width: 72%;
+  display: flex;
+  gap: 8rpx;
+  padding: 4rpx 0;
+}
+
+.limit-tag-btn {
+  flex-shrink: 0;
+  font-size: 20rpx;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 6rpx 14rpx;
+  border-radius: 6rpx;
+  transition: all 0.2s ease;
+}
+
+.limit-tag-btn.active {
+  background: #2563eb;
+  color: white;
+  font-weight: bold;
+}
+
+/* 图纸用色一览横栏 */
+.used-palette-box {
+  margin-top: 12rpx;
+  background: #f8fafc;
+  padding: 10rpx 14rpx;
+  border-radius: 10rpx;
+  border: 1rpx solid #e2e8f0;
+}
+
+.pal-title {
+  font-size: 22rpx;
+  color: #334155;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.used-color-scroll {
+  white-space: nowrap;
+  display: flex;
+  gap: 12rpx;
+  width: 100%;
+}
+
+.used-color-item {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1rpx solid #e2e8f0;
+  border-radius: 8rpx;
+  padding: 4rpx 10rpx;
+  gap: 6rpx;
+}
+
+.color-dot {
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  border: 1rpx solid rgba(0, 0, 0, 0.1);
+}
+
+.color-code-text {
+  font-size: 20rpx;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.color-cnt-text {
+  font-size: 18rpx;
+  color: #64748b;
+}
+
+/* 消除原先上下多余的大灰边，让正方形画板紧凑贴合 */
+.canvas-viewport {
+  flex: none !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 10rpx 0 !important;
+}
+
+.bubble-canvas {
+  width: 690rpx !important;
+  height: 690rpx !important;
+  background: #f1f5f9;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  touch-action: none;
+}

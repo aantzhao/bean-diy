@@ -1,0 +1,434 @@
+<view class="player-layout">
+  <view class="tab-body">
+
+    <!-- 栏目一：首页（在线预约） -->
+    <view wx:if="{{ currentTab === 0 }}" class="pane-content">
+      <scroll-view class="full-scroll" scroll-y="true">
+        
+        <!-- 顶端待体验卡片 (支持自选切换展示) -->
+        <view class="active-ticket-card" wx:if="{{ activeBooking }}">
+          <view class="ticket-header">
+            <view class="ticket-badge-wrap">
+              <text class="ticket-badge">本次待体验预约</text>
+              <text class="ticket-day-tag">{{ activeBooking.booking_time || activeBooking.time }}</text>
+            </view>
+            <text class="ticket-status">待核销</text>
+          </view>
+          
+          <view class="ticket-code-wrap">
+            <text class="ticket-code-label">到店出示6位核销码</text>
+            <text class="ticket-code-val">{{ activeBooking.code }}</text>
+          </view>
+
+          <view class="ticket-grid">
+            <text><text class="tk">体验方式：</text>{{ activeBooking.location }}</text>
+            <text><text class="tk">体验人数：</text>{{ activeBooking.people_count || activeBooking.peopleCount }} 人</text>
+            <text><text class="tk">已选套餐：</text>{{ activeBooking.package_name || activeBooking.package }}</text>
+            <text class="tk-full"><text class="tk">实付金额：</text>￥{{ activeBooking.amount }}</text>
+          </view>
+
+          <view class="ticket-refund-bar">
+            <view class="refund-tip-text">
+              <text class="tip-icon">🛡️</text>
+              <text>未使用可随时申请原路退款</text>
+            </view>
+            <button size="mini" class="ticket-refund-btn" bindtap="handlePlayerApplyRefund">申请退款</button>
+          </view>
+        </view>
+
+        <!-- 预约表单区域 -->
+        <view class="glass-card form-box">
+          <view class="card-header-clean">
+            <text class="main-title">拼豆游玩预约</text>
+            <text class="sub-rule">店内固定 8 席与 12 套工具</text>
+          </view>
+
+          <!-- 体验方式 -->
+          <view class="form-group">
+            <text class="f-label">体验方式</text>
+            <view class="segmented-control">
+              <view 
+                class="segment-btn {{ formData.location === '店里' ? 'active' : '' }}" 
+                bindtap="changeLocation" 
+                data-val="店里"
+              >实体店内 (最多容纳8人)</view>
+              <view 
+                class="segment-btn {{ formData.location === '自己宿舍' ? 'active' : '' }}" 
+                bindtap="changeLocation" 
+                data-val="自己宿舍"
+              >宿舍外带</view>
+            </view>
+          </view>
+
+          <!-- 人数与时长 -->
+          <view class="form-row-2">
+            <view class="form-group flex-1">
+              <text class="f-label">拼豆人数</text>
+              <picker bindchange="onPeopleChange" value="{{ peopleIndex }}" range="{{ peopleOptions }}">
+                <view class="picker-selector-clean">
+                  <text class="val-bold">{{ peopleOptions[peopleIndex] }} 人</text>
+                  <text class="arrow-down">▾</text>
+                </view>
+              </picker>
+            </view>
+
+            <view class="form-group flex-1">
+              <text class="f-label">游玩时长</text>
+              <picker bindchange="onDurationChange" value="{{ durationIndex }}" range="{{ durationDisplayOptions }}">
+                <view class="picker-selector-clean">
+                  <text class="val-bold {{ !isPackageAvailable ? 'text-warn' : '' }}">{{ durationDisplayOptions[durationIndex] }}</text>
+                  <text class="arrow-down">▾</text>
+                </view>
+              </picker>
+            </view>
+          </view>
+
+          <!-- 预存时长叠加开关 (非无限量模式才展示) -->
+          <view class="deposit-toggle-box" wx:if="{{ !isUnlimited && userStoredHours > 0 }}">
+            <view class="deposit-info-col">
+              <text class="d-title">⚡ 叠加账户预存时长 (+{{ userStoredHours }}h)</text>
+              <text class="d-desc">开启后上限扩充至 {{ maxAllowedHours }} 小时</text>
+            </view>
+            <switch color="#2563eb" checked="{{ useStoredToggle }}" bindchange="toggleUseStoredHours" />
+          </view>
+
+          <!-- 套餐匹配卡片 -->
+          <view class="match-pkg-card" wx:if="{{ isPackageAvailable && currentPackage }}">
+            <view class="match-pkg-header">
+              <text class="match-tag">在售套餐匹配 ({{ currentPackage.people_limit }}人 / {{ currentPackage.duration_hours }}h)</text>
+              <text class="match-price">￥{{ currentPackage.price }}</text>
+            </view>
+            <view class="match-pkg-name">{{ currentPackage.name }}</view>
+          </view>
+
+          <view class="match-warning-card" wx:if="{{ !isPackageAvailable }}">
+            <view class="warn-title">⚠️ 暂无对应在售套餐规格</view>
+            <view class="warn-desc">{{ packageWarningTip }}</view>
+          </view>
+
+          <!-- A. 全天无限量模式 -->
+          <view class="allday-pass-card" wx:if="{{ isUnlimited }}">
+            <view class="pass-header">
+              <text class="pass-icon">🎫</text>
+              <text class="pass-title">全天畅玩通票（无需选时段）</text>
+            </view>
+            <view class="pass-rules">
+              <text class="pass-rule-item">· 到店出示核销码，店员核销后立即激活</text>
+              <text class="pass-rule-item">· <text class="rule-hl">核销起算 25 小时内</text>，营业时间内随时进店畅玩</text>
+              <text class="pass-rule-item">· 无限量通票不限时段、不产生预存结余时长</text>
+            </view>
+          </view>
+
+          <!-- B. 普通小时套餐模式 -->
+          <block wx:if="{{ !isUnlimited }}">
+            <view class="form-group">
+              <view class="f-label-row">
+                <text class="f-label">选择预约日期</text>
+                <text class="day-desc">{{ selectedDateDesc }}</text>
+              </view>
+              <picker mode="date" value="{{ selectedDate }}" start="{{ minDate }}" end="{{ maxDate }}" bindchange="onDateChange">
+                <view class="picker-selector-clean">
+                  <text class="val-bold">📅 {{ selectedDate }}</text>
+                  <text class="arrow-down">切换日期 ▾</text>
+                </view>
+              </picker>
+            </view>
+
+            <view class="form-group">
+              <view class="f-label-row">
+                <text class="f-label">预约时段 (已选 {{ currentBookedHours }}h / 上限 {{ maxAllowedHours }}h)</text>
+                <text class="deposit-tag" wx:if="{{ remainingDepositHours > 0 }}">余 {{ remainingDepositHours }}h 自动存入账户</text>
+              </view>
+
+              <view class="time-capsule-grid">
+                <view 
+                  class="time-capsule-btn {{ item.isOpen ? (item.isSelected ? 'selected' : 'open') : 'disabled' }}" 
+                  wx:for="{{ timeSlotsForCurrentDay }}" 
+                  wx:key="time"
+                  bindtap="selectTimeSlot"
+                  data-slot="{{ item }}"
+                >
+                  <text class="t-time">{{ item.time }}</text>
+                  <text class="t-state">{{ item.isPast ? '已过' : (item.isFull ? '满座' : (item.isOpen ? (item.isSelected ? '已选' : '余' + item.remainingSeats + '座') : '休息')) }}</text>
+                  <text class="t-tool" wx:if="{{ item.isOpen && !item.isFull && !item.isPast }}">工:{{ item.remainingTools }}</text>
+                </view>
+              </view>
+            </view>
+          </block>
+
+          <!-- 预约联系手机 -->
+          <view class="form-group">
+            <text class="f-label">预约联系手机号</text>
+            <input 
+              class="f-input-clean" 
+              type="number" 
+              placeholder="请输入手机号" 
+              value="{{ userPhone }}" 
+              bindinput="onPhoneInput" 
+            />
+          </view>
+
+          <!-- 优惠券抵扣 -->
+          <view class="form-group" wx:if="{{ isPackageAvailable }}">
+            <view class="f-label-row">
+              <text class="f-label">卡券抵扣 ({{ availableCoupons.length }}张可用)</text>
+              <text class="coupon-tip-tag" wx:if="{{ availableCoupons.length > 0 }}">已为你选推荐优惠</text>
+            </view>
+            <picker bindchange="onCouponChange" value="{{ couponIndex }}" range="{{ couponPickerOptions }}">
+              <view class="picker-selector-clean coupon-active-bar">
+                <text class="{{ couponIndex > 0 ? 'coupon-txt-highlight' : 'coupon-txt-none' }}">{{ couponPickerOptions[couponIndex] }}</text>
+                <text class="arrow-down">▾</text>
+              </view>
+            </picker>
+          </view>
+
+          <!-- 结算明细 -->
+          <view class="price-checkout-card">
+            <view class="checkout-row">
+              <text class="ck-label">套餐定价</text>
+              <text class="ck-val">￥{{ rawTotalAmount }}</text>
+            </view>
+            <view class="checkout-row" wx:if="{{ discountAmount > 0 }}">
+              <text class="ck-label ck-green">优惠抵扣</text>
+              <text class="ck-val ck-green">- ￥{{ discountAmount }}</text>
+            </view>
+            <view class="checkout-row" wx:if="{{ usedStoredHoursForThisOrder > 0 }}">
+              <text class="ck-label ck-green">预存时长抵扣</text>
+              <text class="ck-val ck-green">抵消 {{ usedStoredHoursForThisOrder }}h</text>
+            </view>
+            <view class="checkout-divider"></view>
+            <view class="checkout-row final-row">
+              <text class="final-label">实际应付</text>
+              <view class="final-price-wrap">
+                <text class="currency">￥</text>
+                <text class="final-num">{{ finalPayAmount }}</text>
+              </view>
+            </view>
+          </view>
+
+          <!-- 提交预约按钮 -->
+          <button 
+            class="pay-submit-btn {{ !isPackageAvailable ? 'btn-disabled' : '' }}" 
+            bindtap="handleWechatPayAndBook"
+          >
+            {{ isPackageAvailable ? ('确认预约 (￥' + finalPayAmount + ')') : '暂无对应套餐，请调整规格' }}
+          </button>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 栏目二：图纸生成（解压捏泡泡·限定主色·划过点亮） -->
+    <view wx:if="{{ currentTab === 1 }}" class="pane-content pixel-pane">
+      <canvas type="2d" id="offscreenCanvas" class="hidden-canvas"></canvas>
+
+      <view class="pixel-ctrl-card">
+        <!-- 1. 规格选择 -->
+        <view class="pixel-row-header">
+          <text class="ctrl-title">画布规格：</text>
+          <view class="size-segmented">
+            <view 
+              class="size-btn {{ boardGridSize === item ? 'active' : '' }}" 
+              wx:for="{{ sizeOptions }}" 
+              wx:key="*this" 
+              bindtap="onSizeChange" 
+              data-size="{{ item }}"
+            >{{ item }}×{{ item }}</view>
+          </view>
+        </view>
+
+        <!-- 2. 最大颜色数选择 (横向滑动条) -->
+        <view class="pixel-row-header" style="margin-top: 10rpx;">
+          <text class="ctrl-title">最大色数：</text>
+          <scroll-view class="color-limit-scroll" scroll-x="true" enable-flex="true">
+            <view 
+              class="limit-tag-btn {{ maxColorLimit === item ? 'active' : '' }}" 
+              wx:for="{{ colorLimitOptions }}" 
+              wx:key="*this" 
+              bindtap="onColorLimitChange" 
+              data-val="{{ item }}"
+            >{{ item === 999 ? '不限' : item + '色' }}</view>
+          </scroll-view>
+        </view>
+
+        <!-- 3. 操作按钮与点亮进度 -->
+        <view class="pixel-action-row" style="margin-top: 14rpx;">
+          <button size="mini" class="pixel-op-btn pic-btn" bindtap="chooseUserImage">🖼️ 选取图片</button>
+          <button size="mini" class="pixel-op-btn gen-btn" bindtap="generatePixelBlueprint" disabled="{{ !pickedImageSrc }}">✨ 生成底图</button>
+          <button size="mini" class="pixel-op-btn clear-btn" bindtap="resetBoardState">清空</button>
+        </view>
+
+        <view class="stock-reminder-bar">
+          <text class="remind-tip">💡 滑过置灰圆点点亮真色</text>
+          <text class="filled-stats">点亮: {{ filledCount }}/{{ totalBeadCount }}</text>
+        </view>
+
+        <!-- 4. 图纸所用色号明细栏 -->
+        <view class="used-palette-box" wx:if="{{ usedColorList.length > 0 }}">
+          <view class="palette-head-row">
+            <text class="pal-title">当前图纸用色 (共 {{ usedColorList.length }} 色)</text>
+          </view>
+          <scroll-view class="used-color-scroll" scroll-x="true" enable-flex="true">
+            <view class="used-color-item" wx:for="{{ usedColorList }}" wx:key="code">
+              <view class="color-dot" style="background-color: {{ item.hex }};"></view>
+              <text class="color-code-text">{{ item.code }}</text>
+              <text class="color-cnt-text">{{ item.count }}颗</text>
+            </view>
+          </scroll-view>
+        </view>
+      </view>
+
+      <!-- 严格贴合画板 -->
+      <view class="canvas-viewport">
+        <canvas 
+          type="2d" 
+          id="bubbleCanvas" 
+          class="bubble-canvas"
+          bindtouchstart="onCanvasTouchStart"
+          bindtouchmove="onCanvasTouchMove"
+          bindtouchend="onCanvasTouchEnd"
+        ></canvas>
+      </view>
+    </view>
+
+    <!-- 栏目三：优惠活动 -->
+    <view wx:if="{{ currentTab === 2 }}" class="pane-content">
+      <scroll-view class="full-scroll" scroll-y="true">
+        <view class="promo-hero-card">
+          <view class="promo-tag-top">限时活动</view>
+          <view class="promo-main-title">新人体验特惠</view>
+          <view class="promo-desc">注册即享专属特惠，邀请好友额外获赠 100 颗拼豆！</view>
+          <button class="claim-promo-btn" size="mini" bindtap="goToBookingTab">去预约使用</button>
+        </view>
+
+        <view class="section-title">我的优惠券 ({{ myCoupons.length }} 张)</view>
+        <view class="coupon-card {{ item.is_used ? 'coupon-used' : '' }}" wx:for="{{ myCoupons }}" wx:key="id">
+          <view class="c-left">
+            <text class="c-num-tag">{{ item.discount_val }}折</text>
+            <text class="c-type-lbl">折扣特惠</text>
+          </view>
+          <view class="c-right">
+            <text class="c-name">{{ item.title }}</text>
+            <text class="c-limit">适用: {{ item.target_pkg }}</text>
+            <text class="c-time">有效期: {{ item.expire_desc }}</text>
+          </view>
+        </view>
+        <view wx:if="{{ myCoupons.length === 0 }}" class="empty-tip">暂无优惠券</view>
+      </scroll-view>
+    </view>
+
+    <!-- 栏目四：个人中心 -->
+    <view wx:if="{{ currentTab === 3 }}" class="pane-content">
+      <scroll-view class="full-scroll" scroll-y="true">
+        <view class="user-main-card">
+          <view class="user-head-row">
+            <view class="user-avatar-circle">🎮</view>
+            <view class="user-base-info">
+              <text class="u-name">{{ userDisplayName }}</text>
+              <text class="u-phone">绑定手机：{{ userPhone || '未绑定' }}</text>
+            </view>
+            <button class="edit-profile-btn" size="mini" bindtap="openEditProfileModal">⚙️ 编辑资料</button>
+          </view>
+
+          <view class="wallet-bar">
+            <view class="wallet-item">
+              <text class="w-label">预存时长</text>
+              <text class="w-val hours-val">{{ userStoredHours }} h</text>
+            </view>
+            <view class="wallet-item">
+              <text class="w-label">可用卡券</text>
+              <text class="w-val">{{ availableCoupons.length }} 张</text>
+            </view>
+            <view class="wallet-item">
+              <text class="w-label">累计预约</text>
+              <text class="w-val">{{ userHistoryList.length }} 次</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="card-box">
+          <view class="card-title">我的预约订单 (点击待核销单可自选使用)</view>
+          <view 
+            class="history-item {{ item.code === activeBooking.code ? 'history-item-active' : '' }}" 
+            wx:for="{{ userHistoryList }}" 
+            wx:key="id"
+            bindtap="selectOrderToUse"
+            data-order="{{ item }}"
+          >
+            <view class="h-top">
+              <view class="h-pkg-wrap">
+                <text class="h-pkg">{{ item.package_name }}</text>
+                <text class="active-badge" wx:if="{{ item.code === activeBooking.code && item.status === '待核销' }}">当前出示中</text>
+              </view>
+              <text class="h-stat {{ item.status === '已核销' ? 'tag-done' : (item.status === '已全额退款' ? 'tag-refund' : 'tag-pending') }}">{{ item.status }}</text>
+            </view>
+            <view class="h-meta">
+              <text>地点：{{ item.location }} | 时段：{{ item.booking_time }} ({{ item.people_count }}人)</text>
+              <text>实付：￥{{ item.amount }} | 核销码：<text class="code-bold">{{ item.code }}</text></text>
+            </view>
+            <view class="h-action-bar" wx:if="{{ item.status === '待核销' }}">
+              <text class="use-tip">点击切换到首页出示此券 ➔</text>
+            </view>
+          </view>
+          <view wx:if="{{ userHistoryList.length === 0 }}" class="empty-tip">暂无预约历史记录</view>
+        </view>
+      </scroll-view>
+    </view>
+
+  </view>
+
+  <!-- 底部四栏 TabBar -->
+  <view class="player-tab-bar">
+    <view class="tab-item {{ currentTab === 0 ? 'active' : '' }}" bindtap="switchTab" data-index="{{ 0 }}">
+      <text class="tab-icon">🏠</text>
+      <text class="tab-name">首页预约</text>
+    </view>
+    <view class="tab-item {{ currentTab === 1 ? 'active' : '' }}" bindtap="switchTab" data-index="{{ 1 }}">
+      <text class="tab-icon">🎨</text>
+      <text class="tab-name">图纸生成</text>
+    </view>
+    <view class="tab-item {{ currentTab === 2 ? 'active' : '' }}" bindtap="switchTab" data-index="{{ 2 }}">
+      <text class="tab-icon">🎁</text>
+      <text class="tab-name">优惠活动</text>
+    </view>
+    <view class="tab-item {{ currentTab === 3 ? 'active' : '' }}" bindtap="switchTab" data-index="{{ 3 }}">
+      <text class="tab-icon">👤</text>
+      <text class="tab-name">个人中心</text>
+    </view>
+  </view>
+
+  <!-- 编辑资料弹窗 -->
+  <view class="modal-mask" wx:if="{{ showEditProfileModal }}" bindtap="closeEditProfileModal">
+    <view class="modal-box" catchtap="stopBubble">
+      <view class="modal-header">
+        <text class="modal-title">修改个人资料</text>
+        <text class="close-icon" bindtap="closeEditProfileModal">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">玩家昵称</text>
+          <input class="m-input" placeholder="输入新昵称" value="{{ profileForm.name }}" bindinput="onProfileNameInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">绑定手机号</text>
+          <input class="m-input" type="number" maxlength="11" placeholder="输入11位手机号" value="{{ profileForm.phone }}" bindinput="onProfilePhoneInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">原登录密码 (必填校验)</text>
+          <input class="m-input" password="true" placeholder="请输入当前密码以验证身份" value="{{ profileForm.oldPassword }}" bindinput="onProfileOldPwdInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">新密码 (不修改请留空)</text>
+          <input class="m-input" password="true" placeholder="留空则保持原密码" value="{{ profileForm.newPassword }}" bindinput="onProfileNewPwdInput" />
+        </view>
+        <view class="input-group">
+          <text class="input-label">确认新密码</text>
+          <input class="m-input" password="true" placeholder="请再次输入新密码" value="{{ profileForm.confirmNewPassword }}" bindinput="onProfileConfirmPwdInput" />
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="m-btn cancel-btn" bindtap="closeEditProfileModal">取消</button>
+        <button class="m-btn confirm-btn" bindtap="confirmUpdateProfile">保存修改</button>
+      </view>
+    </view>
+  </view>
+</view>

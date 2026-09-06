@@ -1,0 +1,413 @@
+.merchant-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.tab-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.tab-pane {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 20rpx;
+}
+
+/* 概况卡片 */
+.summary-card {
+  background: white;
+  padding: 20rpx;
+  border-radius: 14rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+  margin-bottom: 16rpx;
+}
+.card-title { font-size: 26rpx; font-weight: bold; color: #333; margin-bottom: 12rpx; }
+.stats-row { display: flex; justify-content: space-around; text-align: center; }
+.stat-item .num { font-size: 34rpx; font-weight: bold; color: #1976d2; display: block; }
+.stat-item .num.full { color: #f44336; }
+.stat-item .label { font-size: 20rpx; color: #777; margin-top: 4rpx; display: block; }
+
+/* 校验条 */
+.verify-bar { display: flex; gap: 12rpx; margin-bottom: 16rpx; }
+.verify-input { flex: 1; background: white; border-radius: 10rpx; padding: 14rpx 20rpx; font-size: 26rpx; border: 1rpx solid #ddd; }
+.verify-btn { background: #1976d2; color: white; font-size: 24rpx; padding: 0 28rpx; display: flex; align-items: center; }
+
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12rpx; }
+.title-text { font-size: 28rpx; font-weight: bold; }
+.sub-text { font-size: 20rpx; color: #999; }
+
+/* 预约列表 */
+.booking-scroll-area { flex: 1; height: 0; }
+.booking-item { background: white; border-radius: 14rpx; padding: 20rpx; margin-bottom: 14rpx; box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.03); }
+.item-header { display: flex; justify-content: space-between; border-bottom: 1rpx solid #f0f0f0; padding-bottom: 10rpx; margin-bottom: 10rpx; }
+.user-main { font-weight: bold; font-size: 26rpx; }
+.badge { font-size: 20rpx; padding: 4rpx 10rpx; border-radius: 6rpx; }
+.tag-pending { background: #fff3e0; color: #ff9800; }
+.tag-done { background: #e8f5e9; color: #4caf50; }
+.tag-refund { background: #ffebee; color: #f44336; }
+
+.item-grid { display: grid; grid-template-columns: 1fr 1fr; row-gap: 6rpx; font-size: 22rpx; color: #555; }
+.k { color: #888; }
+.refund-text { color: #d32f2f; font-weight: bold; }
+.full-row { grid-column: span 2; margin-top: 4rpx; }
+.code-highlight { font-size: 26rpx; font-weight: bold; color: #e91e63; }
+
+.item-actions { display: flex; justify-content: flex-end; gap: 14rpx; margin-top: 12rpx; padding-top: 10rpx; border-top: 1rpx dashed #eee; }
+.action-btn { margin: 0 !important; font-size: 20rpx !important; }
+.refund-btn { background: #fbe9e7; color: #d32f2f; }
+.check-btn { background: #e3f2fd; color: #1976d2; }
+
+/* 色号库存栏目与左右分栏 */
+.stock-header-card { background: white; border-radius: 14rpx; padding: 24rpx; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16rpx; }
+.stock-title { font-size: 24rpx; color: #666; display: block; }
+.stock-total-num { font-size: 42rpx; font-weight: bold; color: #00897b; }
+.stock-unit { font-size: 22rpx; font-weight: normal; color: #888; }
+.add-color-btn { background: #e0f2f1; color: #00796b; border: none; }
+
+.color-split-container {
+  display: flex;
+  height: calc(100vh - 280rpx);
+  background: white;
+  border-radius: 16rpx;
+  overflow: hidden;
+  margin-top: 14rpx;
+}
+
+.series-sidebar {
+  width: 170rpx;
+  background: #f8fafc;
+  border-right: 1rpx solid #e2e8f0;
+}
+
+.series-item {
+  padding: 24rpx 0;
+  text-align: center;
+  font-size: 26rpx;
+  color: #64748b;
+  border-bottom: 1rpx solid #f1f5f9;
+}
+
+.series-item.active {
+  background: white;
+  color: #2563eb;
+  font-weight: bold;
+  border-left: 6rpx solid #2563eb;
+}
+
+.color-detail-scroll {
+  flex: 1;
+  padding: 16rpx;
+}
+
+.color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; }
+.color-card { background: #fafafa; border: 1rpx solid #eee; border-radius: 12rpx; padding: 16rpx; box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.03); }
+.color-dot-wrap { display: flex; align-items: center; gap: 12rpx; margin-bottom: 8rpx; }
+.color-preview { width: 36rpx; height: 36rpx; border-radius: 50%; border: 1rpx solid #ddd; }
+.color-meta { display: flex; flex-direction: column; }
+.c-code { font-size: 22rpx; font-weight: bold; color: #333; }
+.c-name { font-size: 18rpx; color: #888; }
+.c-stock-val { font-size: 32rpx; font-weight: bold; color: #333; margin: 6rpx 0; }
+.c-stock-val.low-stock { color: #f44336; }
+.c-actions { display: flex; gap: 8rpx; }
+.c-actions button { flex: 1; margin: 0 !important; font-size: 18rpx !important; padding: 4rpx 0 !important; }
+
+/* 排班面板与 5 列网格 */
+.schedule-panel {
+  background: white;
+  border-radius: 14rpx;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.schedule-sync-hint {
+  font-size: 20rpx;
+  color: #10b981;
+}
+
+.schedule-sync-hint.hint-warn {
+  color: #ea580c;
+  font-weight: bold;
+}
+
+.schedule-tabs {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 12rpx;
+  padding: 6rpx;
+  margin-bottom: 20rpx;
+  gap: 8rpx;
+}
+
+.sched-tab-item {
+  flex: 1;
+  text-align: center;
+  font-size: 24rpx;
+  padding: 12rpx 0;
+  color: #64748b;
+  font-weight: 500;
+  border-radius: 8rpx;
+  transition: all 0.2s ease;
+}
+
+.sched-tab-item.active {
+  background: white;
+  color: #1976d2;
+  font-weight: bold;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 核心优化：5列一行整齐方块矩阵 */
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 10rpx !important;
+  margin-bottom: 16rpx;
+}
+
+.time-capsule {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10rpx 0 !important;
+  border-radius: 10rpx;
+  border: 1rpx solid #e2e8f0;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.time-capsule:active {
+  transform: scale(0.96);
+}
+
+.time-capsule.slot-active {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.time-capsule.slot-active .capsule-time {
+  color: #1d4ed8;
+  font-weight: bold;
+}
+
+.time-capsule.slot-active .capsule-status {
+  color: #2563eb;
+  background: #dbeafe;
+}
+
+.time-capsule.slot-disabled {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  opacity: 0.6;
+}
+
+.time-capsule.slot-disabled .capsule-time {
+  color: #94a3b8;
+}
+
+.time-capsule.slot-disabled .capsule-status {
+  color: #94a3b8;
+  background: #f1f5f9;
+}
+
+.capsule-time {
+  font-size: 22rpx !important;
+  line-height: 1.2;
+}
+
+.capsule-status {
+  font-size: 16rpx !important;
+  padding: 2rpx 6rpx !important;
+  border-radius: 4rpx;
+  margin-top: 2rpx !important;
+}
+
+.schedule-bottom-tip {
+  font-size: 20rpx;
+  color: #94a3b8;
+  line-height: 1.4;
+  background: #f8fafc;
+  padding: 10rpx 14rpx;
+  border-radius: 8rpx;
+}
+
+.schedule-action-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 10rpx;
+}
+
+.save-schedule-btn {
+  width: 100% !important;
+  background: #1976d2;
+  color: white;
+  font-size: 26rpx;
+  font-weight: bold;
+  padding: 18rpx 0;
+  border-radius: 10rpx;
+  margin: 0 !important;
+}
+
+.save-schedule-btn.btn-highlight {
+  background: linear-gradient(135deg, #1976d2, #0d47a1);
+  box-shadow: 0 4rpx 12rpx rgba(25, 118, 210, 0.3);
+}
+
+.save-schedule-btn:active {
+  opacity: 0.85;
+}
+
+/* 套餐与优惠推送 */
+.push-action-row { display: flex; gap: 16rpx; margin-bottom: 12rpx; }
+.push-btn { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 24rpx; padding: 16rpx 0; border-radius: 10rpx; color: white; }
+.auto-btn { background: linear-gradient(135deg, #ff9800, #f57c00); }
+.manual-btn { background: linear-gradient(135deg, #7e57c2, #5e35b1); }
+.btn-icon { margin-right: 6rpx; }
+.rule-tip { font-size: 20rpx; color: #777; background: #fff8e1; padding: 10rpx 14rpx; border-radius: 8rpx; }
+
+.pkg-manage-list { display: flex; flex-direction: column; gap: 12rpx; margin-top: 10rpx; }
+.pkg-manage-card { background: #fafafa; border: 1rpx solid #eee; border-radius: 12rpx; padding: 16rpx 20rpx; }
+.pkg-manage-card.pkg-off-shelf { background: #f1f5f9; border-color: #cbd5e1; opacity: 0.7; }
+.pkg-info-top { display: flex; justify-content: space-between; align-items: center; }
+.pkg-title-wrap { display: flex; align-items: center; gap: 12rpx; }
+.pkg-name-text { font-size: 26rpx; font-weight: bold; color: #333; }
+.pkg-status-badge { font-size: 18rpx; padding: 2rpx 10rpx; border-radius: 6rpx; }
+.on-badge { background: #e8f5e9; color: #2e7d32; }
+.off-badge { background: #fee2e2; color: #dc2626; }
+.pkg-price-text { font-size: 28rpx; font-weight: bold; color: #e65100; }
+.pkg-info-sub { display: flex; justify-content: space-between; align-items: center; margin-top: 10rpx; font-size: 22rpx; }
+.pkg-people-badge { color: #666; }
+.pkg-ops { display: flex; gap: 10rpx; }
+.pkg-toggle-btn { margin: 0 !important; font-size: 20rpx !important; padding: 4rpx 14rpx !important; }
+.btn-delist { background: #fee2e2; color: #dc2626; }
+.btn-relist { background: #e0f2fe; color: #0284c7; }
+.pkg-meta-tags { display: flex; gap: 12rpx; align-items: center; }
+.pkg-duration-badge { font-size: 20rpx; color: #0284c7; background: #e0f2fe; padding: 2rpx 10rpx; border-radius: 6rpx; }
+.btn-delete { background: #f1f5f9; color: #64748b; border: 1rpx solid #cbd5e1; }
+.btn-delete:active { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+
+.percent-input-row { display: flex; align-items: center; gap: 12rpx; }
+.percent-unit { font-size: 26rpx; font-weight: bold; color: #5e35b1; }
+.discount-calc-preview {
+  background: #f3e8ff;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  margin-top: 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.calc-row { display: flex; justify-content: space-between; font-size: 24rpx; }
+.c-k { color: #6b21a8; }
+.c-v { font-weight: bold; color: #333; }
+.highlight-price { color: #e11d48; font-size: 28rpx; }
+.save-price { color: #16a34a; }
+
+.push-history-list { display: flex; flex-direction: column; gap: 10rpx; margin-top: 10rpx; }
+.push-record-item { border-bottom: 1rpx solid #f0f0f0; padding: 10rpx 0; font-size: 22rpx; }
+.p-rec-top { display: flex; justify-content: space-between; margin-bottom: 4rpx; }
+.p-rec-user { font-weight: bold; color: #333; }
+.p-rec-tag { color: #1976d2; font-size: 20rpx; }
+.p-rec-detail { color: #666; }
+.p-rec-time { color: #aaa; font-size: 18rpx; margin-top: 4rpx; }
+
+/* 用户列表与密码防误触按钮 */
+.user-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 16rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.user-basic-info { display: flex; flex-direction: column; }
+.user-title-name { font-size: 30rpx; font-weight: bold; color: #333; }
+.user-sub-phone { font-size: 24rpx; color: #888; margin-top: 6rpx; }
+.user-meta-info { text-align: right; display: flex; flex-direction: column; }
+.user-balance { font-size: 28rpx; font-weight: 500; color: #ff5722; }
+.user-time { font-size: 22rpx; color: #aaa; margin-top: 6rpx; }
+
+.reset-action-btn {
+  margin: 0 !important;
+  font-size: 20rpx !important;
+  border-radius: 8rpx;
+  padding: 6rpx 14rpx;
+}
+
+.btn-gray-disabled {
+  background: #f1f5f9 !important;
+  color: #94a3b8 !important;
+  pointer-events: none !important;
+}
+
+.btn-red-active {
+  background: #fee2e2 !important;
+  color: #dc2626 !important;
+  font-weight: bold !important;
+  border: 1rpx solid #fca5a5 !important;
+}
+
+/* 后台数据与收益 */
+.data-scroll-area { height: 100%; }
+.panel-box { background: white; border-radius: 14rpx; padding: 20rpx; margin-bottom: 16rpx; }
+.panel-title { font-size: 26rpx; font-weight: bold; color: #333; margin-bottom: 12rpx; border-left: 6rpx solid #1976d2; padding-left: 10rpx; }
+.panel-header-with-btn { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12rpx; }
+.panel-action-btn { margin: 0 !important; font-size: 20rpx !important; background: #e3f2fd; color: #1976d2; }
+.add-admin-btn { background: #e8f5e9; color: #2e7d32; }
+.info-row { font-size: 24rpx; margin-bottom: 8rpx; }
+.role-tag { font-size: 18rpx; background: #ede7f6; color: #5e35b1; padding: 2rpx 8rpx; border-radius: 4rpx; margin-left: 8rpx; }
+.admin-account-sublist { margin-top: 16rpx; border-top: 1rpx dashed #eee; padding-top: 12rpx; }
+.sub-list-title { font-size: 22rpx; color: #888; margin-bottom: 8rpx; }
+.admin-row { display: flex; justify-content: space-between; font-size: 22rpx; padding: 6rpx 0; color: #555; }
+.admin-row-role { color: #1976d2; }
+
+.income-dual-card { display: flex; background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; border-radius: 14rpx; padding: 24rpx 16rpx; align-items: center; }
+.income-col { flex: 1; text-align: center; }
+.income-divider { width: 2rpx; height: 60rpx; background: rgba(255, 255, 255, 0.25); }
+.inc-label { font-size: 22rpx; opacity: 0.85; display: block; }
+.inc-value { font-size: 36rpx; font-weight: bold; margin: 6rpx 0; display: block; }
+.inc-count { font-size: 18rpx; opacity: 0.7; display: block; }
+.tag-done-text { color: #2e7d32; font-weight: bold; }
+.tag-pending-text { color: #ef6c00; }
+.text-ellipsis { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 140rpx; }
+
+.sub-table-title { font-size: 22rpx; font-weight: bold; margin-bottom: 8rpx; color: #666; }
+.detail-table { border: 1rpx solid #eee; border-radius: 6rpx; }
+.table-head, .table-row { display: flex; padding: 10rpx 14rpx; font-size: 22rpx; }
+.table-head { background: #fafafa; font-weight: bold; color: #666; }
+.table-row { border-top: 1rpx solid #eee; }
+.th, .td { flex: 1; }
+.income-text { color: #2e7d32; font-weight: bold; }
+.empty-tip { text-align: center; color: #999; padding: 40rpx 0; font-size: 26rpx; }
+
+/* 底部 TabBar */
+.bottom-tab-bar { display: flex; height: 100rpx; background: white; border-top: 1rpx solid #e0e0e0; }
+.tab-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #777; }
+.tab-btn.active { color: #1976d2; }
+.tab-icon { font-size: 36rpx; line-height: 1; margin-bottom: 6rpx; display: block; }
+.tab-title { font-size: 20rpx; margin-top: 2rpx; }
+
+/* 弹窗样式 */
+.modal-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 999; }
+.modal-box { width: 86%; background: white; border-radius: 20rpx; padding: 30rpx; box-sizing: border-box; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20rpx; }
+.modal-title { font-size: 28rpx; font-weight: bold; color: #333; }
+.close-icon { font-size: 44rpx; color: #999; line-height: 1; }
+
+.input-group { margin-bottom: 16rpx; }
+.input-label { font-size: 24rpx; color: #666; margin-bottom: 6rpx; display: block; }
+.m-input { background: #f7f9fa; border: 1rpx solid #e2e8f0; border-radius: 10rpx; padding: 12rpx 16rpx; font-size: 24rpx; }
+.picker-m-box { background: #f7f9fa; border: 1rpx solid #e2e8f0; border-radius: 10rpx; padding: 14rpx 16rpx; font-size: 24rpx; color: #333; }
+
+.palette-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10rpx; margin-top: 6rpx; }
+.palette-item { width: 40rpx; height: 40rpx; border-radius: 50%; }
+.palette-item.selected { border: 2rpx solid #000; transform: scale(1.15); }
+.modal-footer { display: flex; gap: 20rpx; margin-top: 24rpx; }
+.m-btn { flex: 1; font-size: 26rpx; padding: 12rpx 0; }
+.cancel-btn { background: #f1f5f9; color: #475569; }
+.confirm-btn { background: #1976d2; color: white; }
